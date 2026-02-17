@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ValidationState } from './order.model';
+import { ValidationState } from '../models/order.model';
 
 function onlyDigits(v: string) {
   return (v || '').replace(/\D/g, '');

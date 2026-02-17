@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CrudItem } from './item.model';
+import { CrudItem } from '../models/item.model';
 
 const KEY = 'demo_items';
 

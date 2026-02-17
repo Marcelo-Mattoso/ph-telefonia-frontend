@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ValidationState } from '../../core/order.model';
+import { ValidationState } from '../../core/models';
 
 @Component({
   selector: 'app-validation-badge',

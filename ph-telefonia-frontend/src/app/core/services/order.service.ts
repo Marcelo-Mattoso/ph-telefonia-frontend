@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { OrderRow, ValidationState } from './order.model';
+import { OrderRow, ValidationState } from '../models/order.model';
 
 type OrdersEnvelope = {
   data?: unknown;

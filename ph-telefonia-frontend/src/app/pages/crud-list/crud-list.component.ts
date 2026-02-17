@@ -1,15 +1,12 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 
 import { ShellComponent } from '../../shared/shell/shell.component';
 import { ModalComponent } from '../../shared/modal/modal.component';
 import { ValidationBadgeComponent } from '../../shared/validation-badge/validation-badge.component';
 
-import { OrderRow } from '../../core/order.model';
-import { OrderService } from '../../core/order.service';
-import { ValidationService } from '../../core/validation.service';
-import { AuthService } from '../../core/auth.service';
+import { OrderRow } from '../../core/models';
+import { OrderService, ValidationService } from '../../core/services';
 
 function onlyDigits(v: string) {
   return (v || '').replace(/\D/g, '');
@@ -37,9 +34,7 @@ export class CrudListComponent implements OnInit {
 
   constructor(
     private orders: OrderService,
-    private validator: ValidationService,
-    private auth: AuthService,
-    private router: Router
+    private validator: ValidationService
   ) {}
 
   async ngOnInit() {
@@ -82,11 +77,6 @@ export class CrudListComponent implements OnInit {
     } finally {
       this.loading.set(false);
     }
-  }
-
-  logout() {
-    this.auth.logout();
-    this.router.navigateByUrl('/login');
   }
 
   openCreate() {

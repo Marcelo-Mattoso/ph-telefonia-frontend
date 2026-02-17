@@ -1,0 +1,31 @@
+<div class="user" (click)="toggleMenu($event)">
+  <div class="avatar">
+    @if (photoUrl) {
+      <img [src]="photoUrl" alt="user" />
+    } @else {
+      <span>{{ initials }}</span>
+    }
+  </div>
+
+  <div class="meta">
+    <div class="name">{{ name }}</div>
+    <div class="sub">{{ email }}</div>
+  </div>
+
+  <div class="chev">▾</div>
+</div>
+
+@if (open()) {
+  <div class="menu" (click)="$event.stopPropagation()">
+    <div class="menu-title">Conta</div>
+
+    <label class="toggle">
+      <span>Tema escuro</span>
+      <input type="checkbox" [(ngModel)]="theme.dark" (change)="theme.apply()" />
+    </label>
+
+    <button class="menu-btn danger" (click)="logout(); close()">
+      Sair
+    </button>
+  </div>
+}

@@ -11,19 +11,19 @@
     <div class="nav">
       <div class="nav-item active">Lista</div>
     </div>
+
+      <div class="actions footer">
+       V: 1.0.0
+      </div>
   </aside>
 
   <main class="main">
     <header class="topbar">
       <div class="title">{{ title }}</div>
 
-      <div class="actions">
-        <button class="btn ghost" (click)="toggleTheme()">
-          {{ theme === 'light' ? 'Escuro' : 'Claro' }}
-        </button>
-      </div>
-    </header>
+      <app-user-menu></app-user-menu>
 
+    </header>
     <section class="content">
       <ng-content></ng-content>
     </section>
