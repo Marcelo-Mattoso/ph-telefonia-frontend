@@ -1,0 +1,33 @@
+.backdrop{
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.45);
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  z-index: 50;
+}
+
+.modal{
+  width: min(560px, 100%);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.t{ font-weight: 800; }
+.x{
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 18px;
+}
+.body{ padding: 14px; }

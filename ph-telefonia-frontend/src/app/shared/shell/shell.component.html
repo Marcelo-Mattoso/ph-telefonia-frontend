@@ -1,0 +1,31 @@
+<div class="shell">
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="mark">◎</div>
+      <div class="brand">
+        <div class="name">Seu Projeto</div>
+        <div class="sub">Front-end</div>
+      </div>
+    </div>
+
+    <div class="nav">
+      <div class="nav-item active">Lista</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="title">{{ title }}</div>
+
+      <div class="actions">
+        <button class="btn ghost" (click)="toggleTheme()">
+          {{ theme === 'light' ? 'Escuro' : 'Claro' }}
+        </button>
+      </div>
+    </header>
+
+    <section class="content">
+      <ng-content></ng-content>
+    </section>
+  </main>
+</div>

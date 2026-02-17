@@ -1,0 +1,24 @@
+<div class="wrap">
+  <div class="box">
+    <div class="title">Entrar</div>
+    <div class="sub">Login mockado (qualquer user/senha não vazios).</div>
+
+    <label>
+      <span>Usuário</span>
+      <input [(ngModel)]="username" (input)="clearError()" placeholder="marcelo" />
+    </label>
+
+    <label>
+      <span>Senha</span>
+      <input [(ngModel)]="password" (input)="clearError()" type="password" placeholder="••••••••" />
+    </label>
+
+    @if (error()) {
+      <div class="login-error">
+        {{ error() }}
+      </div>
+    }
+
+    <button class="btn" (click)="submit()">Login</button>
+  </div>
+</div>

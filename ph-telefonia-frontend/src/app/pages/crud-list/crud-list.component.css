@@ -1,0 +1,123 @@
+.toolbar{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.hint{ color: var(--muted); font-size: 13px; }
+.right{ display:flex; gap:10px; }
+
+.card{
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  overflow: auto;
+}
+
+.table{
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1400px;
+}
+th, td{
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+th{ text-align:left; font-size: 12px; color: var(--muted); white-space: nowrap; }
+.actions{ width: 220px; text-align: right; white-space: nowrap; }
+td.actions{ display:flex; gap: 8px; justify-content: flex-end; }
+
+.center{ text-align: center; }
+.mono{ font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.cut{ max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.empty{ color: var(--muted); text-align:center; padding: 22px; }
+
+.btn{
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+.btn.ghost{ background: transparent; }
+.btn.danger{
+  border-color: rgba(220,38,38,.35);
+  color: #dc2626;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+label span{
+  display:block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+input, select{
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  outline: none;
+}
+.col2{ grid-column: span 2; }
+
+.chk{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  padding-top: 22px;
+}
+
+.valid-row{
+  display:flex;
+  gap: 16px;
+  align-items:flex-end;
+  padding-top: 2px;
+}
+.valid-item span{
+  display:block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.ghostbox{
+  grid-column: span 2;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  color: var(--muted);
+}
+
+.row{
+  display:flex;
+  justify-content:flex-end;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.confirm{ margin: 0 0 12px 0; }
+
+.form-error{
+  grid-column: span 2;
+  margin-top: 4px;
+  padding: 10px 12px;
+  border-radius: 10px;
+
+  background: rgba(220, 38, 38, 0.08);
+  border: 1px solid rgba(220, 38, 38, 0.35);
+
+  color: #dc2626;
+  font-weight: 700;
+  font-size: 14px;
+}

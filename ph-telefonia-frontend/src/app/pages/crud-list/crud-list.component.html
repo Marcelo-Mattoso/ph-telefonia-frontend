@@ -1,0 +1,188 @@
+<app-shell title="Planilha de Controle">
+  <div class="toolbar">
+    <div class="hint">
+      CRUD baseado na planilha. Exclusão lógica ativa.
+    </div>
+
+    <div class="right">
+      <button class="btn" (click)="openCreate()">Novo</button>
+      <button class="btn ghost" (click)="logout()">Sair</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Consultor</th>
+          <th>Razão Social</th>
+          <th>CNPJ</th>
+          <th>Receita</th>
+          <th>Estadual</th>
+          <th>Operadora</th>
+          <th>Portab.</th>
+          <th>Status</th>
+          <th class="actions">Ações</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (it of items(); track $index) {
+          <tr>
+            <td>{{ it.data }}</td>
+            <td>{{ it.consultor }}</td>
+            <td class="cut">{{ it.razaoSocial }}</td>
+            <td class="mono">{{ it.cnpj }}</td>
+
+            <td class="center">
+              <app-validation-badge [state]="it.receita" title="Receita"></app-validation-badge>
+            </td>
+            <td class="center">
+              <app-validation-badge [state]="it.estadual" title="Estadual"></app-validation-badge>
+            </td>
+
+            <td>{{ it.operadora }}</td>
+            <td class="center">{{ it.portabilidade ? 'Sim' : 'Não' }}</td>
+            <td class="cut">{{ it.statusProcesso }}</td>
+
+            <td class="actions">
+              <button class="btn" (click)="openEdit(it)">Editar</button>
+              <button class="btn danger" (click)="openDelete(it)">Excluir</button>
+            </td>
+          </tr>
+        }
+
+       @if (!loading() && items().length === 0) {
+          <tr>
+            <td colspan="15" class="empty">Sem registros. </td>
+          </tr>
+        }
+
+        @if (loading()) {
+          <div class="hint">Carregando...</div>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal Create/Edit -->
+  <app-modal
+    [open]="editOpen"
+    [title]="selected ? 'Editar registro' : 'Novo registro'"
+    (close)="closeEdit()"
+  >
+    <div class="form-grid">
+      <label>
+        <span>Data</span>
+        <input type="date" [(ngModel)]="draft.data" />
+      </label>
+
+      <label>
+        <span>Mês</span>
+        <input placeholder="YYYY-MM" [(ngModel)]="draft.mes" />
+      </label>
+
+      <label>
+        <span>Consultor</span>
+        <input [(ngModel)]="draft.consultor" />
+      </label>
+
+      <label>
+        <span>CPF</span>
+        <input placeholder="somente números" [(ngModel)]="draft.cpf" />
+      </label>
+
+      <label class="col2">
+        <span>Razão Social</span>
+        <input [(ngModel)]="draft.razaoSocial" />
+      </label>
+
+      <label>
+        <span>CNPJ</span>
+        <input placeholder="14 dígitos" [(ngModel)]="draft.cnpj" (blur)="onCnpjChanged()" />
+      </label>
+
+      <div class="valid-row">
+        <div class="valid-item">
+          <span>Receita</span>
+          <app-validation-badge [state]="draft.receita" title="Receita"></app-validation-badge>
+        </div>
+        <div class="valid-item">
+          <span>Estadual</span>
+          <app-validation-badge [state]="draft.estadual" title="Estadual"></app-validation-badge>
+        </div>
+      </div>
+
+      <label>
+        <span>Novo/Base</span>
+        <select [(ngModel)]="draft.novoOuBase">
+          <option value="NOVO">NOVO</option>
+          <option value="BASE">BASE</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Produto vendendo</span>
+        <input [(ngModel)]="draft.produtoVendendo" />
+      </label>
+
+      <label>
+        <span>Operadora</span>
+        <input [(ngModel)]="draft.operadora" />
+      </label>
+
+      <label class="chk">
+        <input type="checkbox" [(ngModel)]="draft.portabilidade" />
+        <span>Portabilidade</span>
+      </label>
+
+      @if (draft.portabilidade) {
+        <label>
+          <span>Número portado</span>
+          <input [(ngModel)]="draft.numeroPortado" />
+        </label>
+
+        <label>
+          <span>Número a portar</span>
+          <input [(ngModel)]="draft.numeroAPortar" />
+        </label>
+      } @else {
+        <div class="ghostbox col2">
+          Portabilidade desativada.
+        </div>
+      }
+
+      <label class="col2">
+        <span>Status do processo</span>
+        <input [(ngModel)]="draft.statusProcesso" />
+      </label>
+
+      <label class="col2">
+        <span>Plano utilizado</span>
+        <input [(ngModel)]="draft.planoUtilizado" />
+      </label>
+
+      <div class="row col2">
+        <button class="btn ghost" (click)="closeEdit()" [disabled]="saving">Cancelar</button>
+        <button class="btn" (click)="save()" [disabled]="saving">
+          {{ saving ? 'Salvando...' : 'Salvar' }}
+        </button>
+
+        @if (formError) {
+          <div class="form-error">{{ formError }}</div>
+        }
+
+      </div>
+    </div>
+  </app-modal>
+
+  <!-- Modal Excluir -->
+  <app-modal [open]="deleteOpen" title="Excluir registro" (close)="deleteOpen=false">
+    <p class="confirm">Confirma a exclusão lógica deste registro?</p>
+    <div class="row">
+      <button class="btn ghost" (click)="deleteOpen=false">Cancelar</button>
+      <button class="btn danger" (click)="confirmDelete()">Excluir</button>
+    </div>
+  </app-modal>
+</app-shell>

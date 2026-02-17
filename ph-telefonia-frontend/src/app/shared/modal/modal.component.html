@@ -1,0 +1,12 @@
+<div *ngIf="open" class="backdrop" (click)="onBackdrop($event)">
+  <div class="modal">
+    <div class="header">
+      <div class="t">{{ title }}</div>
+      <button class="x" (click)="close.emit()">✕</button>
+    </div>
+
+    <div class="body">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>
