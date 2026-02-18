@@ -9,7 +9,10 @@
     </div>
 
     <div class="nav">
-      <div class="nav-item active">Lista</div>
+      <a routerLink="/home" routerLinkActive="active" class="nav-item">Home</a>
+      @if (!hasAccess(['consultor'])) {
+        <a routerLink="/order" routerLinkActive="active" class="nav-item">Order</a>
+      }
     </div>
 
       <div class="actions footer">

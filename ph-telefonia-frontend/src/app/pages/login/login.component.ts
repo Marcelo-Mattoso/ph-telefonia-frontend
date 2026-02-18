@@ -29,7 +29,7 @@ export class LoginComponent {
     const result = await this.auth.login(this.username, this.password);
 
     if (result.ok) {
-      this.router.navigateByUrl('/');
+      this.router.navigateByUrl('/home');
     } else {
       this.error.set(result.message || 'Falha no login.');
     }

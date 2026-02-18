@@ -4,10 +4,10 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
 type LoginResponse =
-  | { ok: true; token: string; user: { email: string; name?: string; photoUrl?: string }; expiresInSeconds: number }
+  | { ok: true; token: string; user: { email: string; name?: string; photoUrl?: string; access?: string[] }; expiresInSeconds: number }
   | { ok: false; message?: string };
 
-type AuthUser = { email: string; name?: string; photoUrl?: string };
+type AuthUser = { email: string; name?: string; photoUrl?: string; access?: string[] };
 
 type StoredSession = {
   token: string;
@@ -119,6 +119,11 @@ export class AuthService {
     return Math.max(0, this.expiresAtMs - Date.now());
   }
 
+  hasAnyAccess(required: string[]): boolean {
+    if (!this.user?.access || !Array.isArray(this.user.access)) return false;
+    return required.some((r) => this.user!.access!.includes(r));
+  }
+
   async login(email: string, password: string): Promise<{ ok: boolean; message?: string }> {
     try {
       const res = await firstValueFrom(
@@ -127,11 +132,11 @@ export class AuthService {
 
       if (!res.ok) {
         this.logout();
-        return { ok: false, message: res.message || 'Falha no login.' };
+        return { ok: false, message: res.message || 'Usuário não tem permissão de acesso.' };
       }
 
       this.token = res.token;
-      this.user = res.user;
+      this.user = res.user as AuthUser;
       this.expiresAtMs = Date.now() + res.expiresInSeconds * 1000;
 
       this.saveToStorage();
@@ -139,6 +144,10 @@ export class AuthService {
       return { ok: true };
     } catch (e: any) {
       this.logout();
+      if (e?.status === 403) {
+        return { ok: false, message: 'Usuário não tem permissão de acesso.' };
+      }
+
       const msg = (e?.message && String(e.message).trim())
         ? e.message
         : 'Falha ao autenticar. Verifique servidor e tente novamente.';

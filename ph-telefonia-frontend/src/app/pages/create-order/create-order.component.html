@@ -1,0 +1,261 @@
+<app-shell>
+  <div class="create-order-container">
+    <h1>Criar Nova Order</h1>
+
+    <!-- Seção inicial: busca por CNPJ -->
+    <div class="cnpj-search-section">
+      <h2>Etapa 1: Buscar CNPJ</h2>
+      <p class="instruction">Insira o CNPJ para buscar dados cadastrados ou para criar uma nova order.</p>
+
+      <div class="form-group">
+        <label for="cnpj">CNPJ *</label>
+        <input
+          id="cnpj"
+          type="text"
+          placeholder="00.000.000/0000-00"
+          [(ngModel)]="cnpj"
+          (input)="cnpj.set(formatCnpj($event.target.value))"
+          [disabled]="isSearching()"
+          class="cnpj-input"
+        />
+      </div>
+
+      <div class="button-group">
+        <button
+          type="button"
+          (click)="searchCnpj()"
+          [disabled]="isSearching()"
+          class="btn btn-primary"
+        >
+          {{ isSearching() ? 'Buscando...' : 'Buscar CNPJ' }}
+        </button>
+      </div>
+
+      <!-- Mensagens de status da busca -->
+      <div class="search-feedback" *ngIf="searchMessage()">
+        <p class="message" [ngClass]="formState() === FormState.FILLED ? 'success' : 'info'">
+          {{ searchMessage() }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Seção do formulário: preencher dados -->
+    <div class="form-section" *ngIf="showForm()">
+      <h2>Etapa 2: Dados da Order</h2>
+
+      <!-- Mensagens de erro -->
+      <div class="alert alert-error" *ngIf="formError()">
+        <strong>Erro:</strong> {{ formError() }}
+      </div>
+
+      <!-- Mensagem de sucesso -->
+      <div class="alert alert-success" *ngIf="successMessage()">
+        <strong>Sucesso:</strong> {{ successMessage() }}
+      </div>
+
+      <form (ngSubmit)="saveOrder()" class="order-form">
+        <!-- CNPJ (readonly após busca) -->
+        <div class="form-group">
+          <label for="formCnpj">CNPJ</label>
+          <input
+            id="formCnpj"
+            type="text"
+            [value]="formData().cnpj || ''"
+            disabled
+            class="form-control"
+          />
+        </div>
+
+        <!-- Razão Social *-->
+        <div class="form-group">
+          <label for="razaoSocial">Razão Social *</label>
+          <input
+            id="razaoSocial"
+            type="text"
+            [(ngModel)]="formData().razaoSocial"
+            (ngModelChange)="updateFormData('razaoSocial', $event)"
+            name="razaoSocial"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <!-- CPF -->
+        <div class="form-group">
+          <label for="cpf">CPF</label>
+          <input
+            id="cpf"
+            type="text"
+            [(ngModel)]="formData().cpf"
+            (ngModelChange)="updateFormData('cpf', $event)"
+            name="cpf"
+            class="form-control"
+          />
+        </div>
+
+        <!-- Data -->
+        <div class="form-group">
+          <label for="data">Data</label>
+          <input
+            id="data"
+            type="date"
+            [(ngModel)]="formData().data"
+            (ngModelChange)="updateFormData('data', $event)"
+            name="data"
+            class="form-control"
+          />
+        </div>
+
+        <!-- Mês -->
+        <div class="form-group">
+          <label for="mes">Mês</label>
+          <input
+            id="mes"
+            type="text"
+            placeholder="ex: Fev/2026"
+            [(ngModel)]="formData().mes"
+            (ngModelChange)="updateFormData('mes', $event)"
+            name="mes"
+            class="form-control"
+          />
+        </div>
+
+        <!-- Consultor -->
+        <div class="form-group">
+          <label for="consultor">Consultor</label>
+          <select
+            id="consultor"
+            [(ngModel)]="formData().consultor"
+            (ngModelChange)="updateFormData('consultor', $event)"
+            name="consultor"
+            class="form-control"
+            [disabled]="loadingConsultores()"
+          >
+            <option value="">{{ loadingConsultores() ? 'Carregando...' : 'Selecione um consultor' }}</option>
+            @for (cons of consultores(); track cons.id) {
+              <option [value]="cons.name">{{ cons.name }}</option>
+            }
+          </select>
+        </div>
+
+        <!-- Produto Vendendo -->
+        <div class="form-group">
+          <label for="produtoVendendo">Produto Vendendo</label>
+          <input
+            id="produtoVendendo"
+            type="text"
+            [(ngModel)]="formData().produtoVendendo"
+            (ngModelChange)="updateFormData('produtoVendendo', $event)"
+            name="produtoVendendo"
+            class="form-control"
+          />
+        </div>
+
+        <!-- Operadora -->
+        <div class="form-group">
+          <label for="operadora">Operadora</label>
+          <input
+            id="operadora"
+            type="text"
+            [(ngModel)]="formData().operadora"
+            (ngModelChange)="updateFormData('operadora', $event)"
+            name="operadora"
+            class="form-control"
+          />
+        </div>
+
+        <!-- Plano Utilizado -->
+        <div class="form-group">
+          <label for="planoUtilizado">Plano Utilizado</label>
+          <input
+            id="planoUtilizado"
+            type="text"
+            [(ngModel)]="formData().planoUtilizado"
+            (ngModelChange)="updateFormData('planoUtilizado', $event)"
+            name="planoUtilizado"
+            class="form-control"
+          />
+        </div>
+
+        <!-- Portabilidade -->
+        <div class="form-group checkbox-group">
+          <label>
+            <input
+              type="checkbox"
+              [(ngModel)]="formData().portabilidade"
+              (ngModelChange)="updateFormData('portabilidade', $event)"
+              name="portabilidade"
+            />
+            Portabilidade
+          </label>
+        </div>
+
+        <!-- Número Portado -->
+        <div class="form-group" *ngIf="formData().portabilidade">
+          <label for="numeroPortado">Número Portado</label>
+          <input
+            id="numeroPortado"
+            type="text"
+            [(ngModel)]="formData().numeroPortado"
+            (ngModelChange)="updateFormData('numeroPortado', $event)"
+            name="numeroPortado"
+            class="form-control"
+          />
+        </div>
+
+        <!-- Número a Portar -->
+        <div class="form-group" *ngIf="formData().portabilidade">
+          <label for="numeroAPortar">Número a Portar</label>
+          <input
+            id="numeroAPortar"
+            type="text"
+            [(ngModel)]="formData().numeroAPortar"
+            (ngModelChange)="updateFormData('numeroAPortar', $event)"
+            name="numeroAPortar"
+            class="form-control"
+          />
+        </div>
+
+        <!-- Validações -->
+        <div class="validations-section">
+          <h3>Validações</h3>
+
+          <div class="form-group">
+            <label for="receita">Receita</label>
+            <div class="validation-status">
+              <app-validation-badge [state]="formData().receita || 'pending'"></app-validation-badge>
+              <span class="badge-label">{{ formData().receita || 'pending' }}</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="estadual">Estadual</label>
+            <div class="validation-status">
+              <app-validation-badge [state]="formData().estadual || 'pending'"></app-validation-badge>
+              <span class="badge-label">{{ formData().estadual || 'pending' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botões de ação -->
+        <div class="form-actions">
+          <button
+            type="submit"
+            [disabled]="saving()"
+            class="btn btn-primary"
+          >
+            {{ saving() ? 'Salvando...' : 'Salvar Order' }}
+          </button>
+          <button
+            type="button"
+            (click)="cancel()"
+            [disabled]="saving()"
+            class="btn btn-secondary"
+          >
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-shell>

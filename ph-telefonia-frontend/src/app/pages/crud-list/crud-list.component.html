@@ -5,7 +5,9 @@
     </div>
 
     <div class="right">
-      <button class="btn" (click)="openCreate()">Novo</button>
+      <button class="btn" (click)="goToCreateOrder()" title="Criar nova order com busca de CNPJ">
+        Criar Order
+      </button>
     </div>
   </div>
 
@@ -46,7 +48,7 @@
             <td class="cut">{{ it.statusProcesso }}</td>
 
             <td class="actions">
-              <button class="btn" (click)="openEdit(it)">Editar</button>
+              <button class="btn" (click)="openEdit(it)" title="Editar order">Editar</button>
               <button class="btn danger" (click)="openDelete(it)">Excluir</button>
             </td>
           </tr>
@@ -65,86 +67,75 @@
     </table>
   </div>
 
-  <!-- Modal Create/Edit -->
-  <app-modal
-    [open]="editOpen"
-    [title]="selected ? 'Editar registro' : 'Novo registro'"
-    (close)="closeEdit()"
-  >
-    <div class="form-grid">
-      <label>
-        <span>Data</span>
-        <input type="date" [(ngModel)]="draft.data" />
-      </label>
+  <!-- Modal Editar -->
+  <app-modal [open]="editOpen" title="Editar Order" (close)="closeEdit()">
+    @if (editData) {
+      <div class="form-grid">
+        <label>
+          <span>Data</span>
+          <input type="date" [(ngModel)]="editData!.data" />
+        </label>
 
       <label>
         <span>Mês</span>
-        <input placeholder="YYYY-MM" [(ngModel)]="draft.mes" />
+        <input placeholder="YYYY-MM" [(ngModel)]="editData!.mes" />
       </label>
 
       <label>
         <span>Consultor</span>
-        <input [(ngModel)]="draft.consultor" />
+        <input [(ngModel)]="editData!.consultor" />
       </label>
 
       <label>
         <span>CPF</span>
-        <input placeholder="somente números" [(ngModel)]="draft.cpf" />
+        <input placeholder="somente números" [(ngModel)]="editData!.cpf" />
       </label>
 
       <label class="col2">
         <span>Razão Social</span>
-        <input [(ngModel)]="draft.razaoSocial" />
+        <input [(ngModel)]="editData!.razaoSocial" />
       </label>
 
       <label>
         <span>CNPJ</span>
-        <input placeholder="14 dígitos" [(ngModel)]="draft.cnpj" (blur)="onCnpjChanged()" />
+        <input placeholder="14 dígitos" [(ngModel)]="editData!.cnpj" disabled />
       </label>
 
       <div class="valid-row">
         <div class="valid-item">
           <span>Receita</span>
-          <app-validation-badge [state]="draft.receita" title="Receita"></app-validation-badge>
+          <app-validation-badge [state]="editData!.receita || 'pending'" title="Receita"></app-validation-badge>
         </div>
         <div class="valid-item">
           <span>Estadual</span>
-          <app-validation-badge [state]="draft.estadual" title="Estadual"></app-validation-badge>
+          <app-validation-badge [state]="editData!.estadual || 'pending'" title="Estadual"></app-validation-badge>
         </div>
       </div>
 
       <label>
-        <span>Novo/Base</span>
-        <select [(ngModel)]="draft.novoOuBase">
-          <option value="NOVO">NOVO</option>
-          <option value="BASE">BASE</option>
-        </select>
-      </label>
-
-      <label>
         <span>Produto vendendo</span>
-        <input [(ngModel)]="draft.produtoVendendo" />
+        <input [(ngModel)]="editData!.produtoVendendo" />
       </label>
 
       <label>
         <span>Operadora</span>
-        <input [(ngModel)]="draft.operadora" />
+        <input [(ngModel)]="editData!.operadora" />
       </label>
 
       <label class="chk">
-        <input type="checkbox" [(ngModel)]="draft.portabilidade" />
+        <input type="checkbox" [(ngModel)]="editData!.portabilidade" />
         <span>Portabilidade</span>
       </label>
 
-      @if (draft.portabilidade) {
+      @if (editData!.portabilidade) {
         <label>
           <span>Número portado</span>
-          <input [(ngModel)]="draft.numeroPortado" />
+          <input [(ngModel)]="editData!.numeroPortado" />
         </label>
 
         <label>
           <span>Número a portar</span>
-          <input [(ngModel)]="draft.numeroAPortar" />
+          <input [(ngModel)]="editData!.numeroAPortar" />
         </label>
       } @else {
         <div class="ghostbox col2">
@@ -154,26 +145,26 @@
 
       <label class="col2">
         <span>Status do processo</span>
-        <input [(ngModel)]="draft.statusProcesso" />
+        <input [(ngModel)]="editData!.statusProcesso" />
       </label>
 
       <label class="col2">
         <span>Plano utilizado</span>
-        <input [(ngModel)]="draft.planoUtilizado" />
+        <input [(ngModel)]="editData!.planoUtilizado" />
       </label>
 
       <div class="row col2">
         <button class="btn ghost" (click)="closeEdit()" [disabled]="saving">Cancelar</button>
-        <button class="btn" (click)="save()" [disabled]="saving">
+        <button class="btn" (click)="saveEdit()" [disabled]="saving">
           {{ saving ? 'Salvando...' : 'Salvar' }}
         </button>
 
-        @if (formError) {
-          <div class="form-error">{{ formError }}</div>
+        @if (editError) {
+          <div class="form-error">{{ editError }}</div>
         }
-
       </div>
-    </div>
+      </div>
+    }
   </app-modal>
 
   <!-- Modal Excluir -->
