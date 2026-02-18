@@ -4,10 +4,10 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
 type LoginResponse =
-  | { ok: true; token: string; user: { email: string; name?: string; photoUrl?: string; access?: string[] }; expiresInSeconds: number }
-  | { ok: false; message?: string };
+  | { ok: true; token: string; user: { email: string; name?: string; photoUrl?: string; roles?: string[] }; expiresInSeconds: number }
+  | { ok: false; message?: string }
 
-type AuthUser = { email: string; name?: string; photoUrl?: string; access?: string[] };
+type AuthUser = { email: string; name?: string; photoUrl?: string; roles?: string[] }
 
 type StoredSession = {
   token: string;
@@ -119,9 +119,13 @@ export class AuthService {
     return Math.max(0, this.expiresAtMs - Date.now());
   }
 
+  getUserRoles(): string[] {
+    return Array.isArray(this.user?.roles) ? this.user!.roles : [];
+  }
+
   hasAnyAccess(required: string[]): boolean {
-    if (!this.user?.access || !Array.isArray(this.user.access)) return false;
-    return required.some((r) => this.user!.access!.includes(r));
+    if (!this.user?.roles || !Array.isArray(this.user.roles)) return false;
+    return required.some((r) => this.user!.roles!.includes(r));
   }
 
   async login(email: string, password: string): Promise<{ ok: boolean; message?: string }> {

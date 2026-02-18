@@ -30,6 +30,11 @@ export class ShellComponent {
     return this.auth.hasAnyAccess(roles);
   }
 
+  isOnlyConsultor(): boolean {
+    const roles = this.auth.getUserRoles();
+    return roles.length === 1 && roles[0] === 'consultor';
+  }
+
   toggleTheme() {
     this.theme = this.theme === 'light' ? 'dark' : 'light';
     localStorage.setItem('theme', this.theme);

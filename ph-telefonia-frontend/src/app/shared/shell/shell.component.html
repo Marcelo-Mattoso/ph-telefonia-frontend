@@ -10,7 +10,7 @@
 
     <div class="nav">
       <a routerLink="/home" routerLinkActive="active" class="nav-item">Home</a>
-      @if (!hasAccess(['consultor'])) {
+      @if (!isOnlyConsultor()) {
         <a routerLink="/order" routerLinkActive="active" class="nav-item">Order</a>
       }
     </div>

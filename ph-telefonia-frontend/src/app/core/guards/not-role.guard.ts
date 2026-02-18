@@ -14,8 +14,9 @@ export const notRoleGuard = (forbidden: string[]): CanActivateFn => {
       return false;
     }
 
-    // Se o usuário tem alguma das roles proibidas, bloqueia
-    if (auth.hasAnyAccess(forbidden)) {
+    // Se o usuário SOMENTE TEM uma das roles proibidas, bloqueia
+    const userAccess = auth.getUserRoles();
+    if (userAccess.length === 1 && forbidden.includes(userAccess[0])) {
       router.navigateByUrl('/');
       return false;
     }
